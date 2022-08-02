@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { TransactionContext } from "../context/TransactionContext";
 
 const Welcome = () => {
-  const connectWallet = () => {};
+  const { connectWallet, connectedAccount, sendTransaction } =
+    useContext(TransactionContext);
   const [inp, setInp] = useState({
     address: "",
     amount: "",
@@ -19,10 +21,12 @@ const Welcome = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { address, amount, keyword, message } = inp;
+    sendTransaction(address, amount, message, keyword);
   };
   return (
     <div>
-      <button onClick={connectWallet}>Connect</button>
+      {!connectedAccount && <button onClick={connectWallet}>Connect</button>}
 
       <form onSubmit={handleSubmit}>
         <input
@@ -39,15 +43,15 @@ const Welcome = () => {
         />
         <input
           type="text"
-          name="keyword"
-          onChange={handleChange}
-          placeholder="Keyword"
-        />
-        <input
-          type="text"
           name="message"
           onChange={handleChange}
           placeholder="Message"
+        />
+        <input
+          type="text"
+          name="keyword"
+          onChange={handleChange}
+          placeholder="Keyword"
         />
         <button>Send</button>
       </form>
